@@ -7,18 +7,20 @@
     <link rel="stylesheet" href="style.css">
   </head>  
   <body>
-    <h1>Multiple object detection using pre trained model in TensorFlow.js</h1>
+    <h1>Chakshu</h1>
 
-    <p>Wait for the model to load before clicking the button to enable the webcam - at which point it will become visible to use.</p>
+    <p align="center">Wait for the model to load before clicking the button to enable the webcam - at which point it will become visible to use.</p>
     
     <section id="demos" class="invisible">
 
-      <p>Hold some objects up close to your webcam to get a real-time classification! When ready click "enable webcam" below and accept access to the webcam when the browser asks (check the top left of your window)</p>
+      <p align="center" style="color:#11d438">Hold some objects up close to your webcam to get a real-time classification! When ready click "enable webcam" below and accept access to the webcam when the browser asks (check the top left of your window)</p>
       
       <div id="liveView" class="camView">
-        <button id="webcamButton">Enable Webcam</button>
-        <video id="webcam" autoplay muted width="640" height="480"></video>
-      </div>
+        <div class="wrapper">
+            <button style="white-space: normal; word-wrap: break-word; font-size: 20px;" id="webcamButton">Enable Webcam</button>
+        </div>
+            <video id="webcam" autoplay muted width="640" height="480" align="center"></video>
+       </div>
     </section>
 
     <!-- Import TensorFlow.js library -->

@@ -1,12 +1,27 @@
 body {
     font-family: helvetica, arial, sans-serif;
     margin: 2em;
-    color: #3D3D3D;
+    color: white;
+    background: #000;
   }
   
+  .wrapper {
+    text-align: center;
+}
+
+.button {
+    height: 50px;
+    width: 100px !important; 
+    font-size: 50px;
+    text-decoration:none;
+    position: absolute;
+    top: 50%;
+}
   h1 {
-    font-style: italic;
-    color: #FF6F00;
+    font-size: 150px;
+    text-align: center;
+    font-style: bold;
+    color: green;
   }
   
   video {
