@@ -23,6 +23,11 @@ body {
     font-style: bold;
     color: green;
   }
+  h2 {
+    text-align: center;
+    font-style: bold;
+    color: blue;
+  }
   
   video {
     display: block;
