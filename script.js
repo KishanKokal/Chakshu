@@ -3,23 +3,18 @@ const liveView = document.getElementById('liveView');
 const demosSection = document.getElementById('demos');
 const enableWebcamButton = document.getElementById('webcamButton');
 
-// Check if webcam access is supported.
+// Check for webcam access support
 function getUserMediaSupported() {
     return !!(navigator.mediaDevices &&
         navigator.mediaDevices.getUserMedia);
 }
 
-// If webcam supported, add event listener to button for when user
-// wants to activate it to call enableCam function which we will 
-// define in the next step.
+// add event listener to the button
 if (getUserMediaSupported()) {
     enableWebcamButton.addEventListener('click', enableCam);
 } else {
     console.warn('getUserMedia() is not supported by your browser');
 }
-
-// Placeholder function for next step. Paste over this in the next step.
-function enableCam(event) {}
 
 // Enable the live webcam view and start classification.
 function enableCam(event) {
@@ -33,18 +28,15 @@ function enableCam(event) {
 
     // getUsermedia parameters to force video but not audio.
     const constraints = {
-        video: true
+        video: {frameRate: {ideal: 60, max: 120}}
     };
 
-    // Activate the webcam stream.
+    // Activate the webcam stream
     navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
         video.srcObject = stream;
         video.addEventListener('loadeddata', predictWebcam);
     });
 }
-
-// Placeholder function for next step.
-function predictWebcam() {}
 
 // Pretend model has loaded so we can try out the webcam code.
 var model = true;
@@ -53,11 +45,7 @@ demosSection.classList.remove('invisible');
 // Store the resulting model in the global scope of our app.
 var model = undefined;
 
-// Before we can use COCO-SSD class we must wait for it to finish
-// loading. Machine Learning models can be large and take a moment 
-// to get everything needed to run.
-// Note: cocoSsd is an external object loaded from our index.html
-// script tag import so ignore any warning in Glitch.
+// wait for COCO-SSD to load
 cocoSsd.load().then(function(loadedModel) {
     model = loadedModel;
     // Show demo section now model is ready to use.
@@ -65,21 +53,26 @@ cocoSsd.load().then(function(loadedModel) {
 });
 
 var children = [];
+var new_object = "";
+var msg = new SpeechSynthesisUtterance();
+msg.rate = 0.8;
 
 function predictWebcam() {
-    // Now let's start classifying a frame in the stream.
+    // start classifying frame in the stream
     model.detect(video).then(function(predictions) {
-        // Remove any highlighting we did previous frame.
+        // remove highlighting from the previous frame
         for (let i = 0; i < children.length; i++) {
             liveView.removeChild(children[i]);
         }
         children.splice(0);
 
-        // Now lets loop through predictions and draw them to the live view if
-        // they have a high confidence score.
+        // loop through the predictions and draw bounding boxes in the stream
         for (let n = 0; n < predictions.length; n++) {
-            // If we are over 66% sure we are sure we classified it right, draw it!
+            
+            // draw box if and only if the prediction confidence > 66%
             if (predictions[n].score > 0.66) {
+                msg.text = predictions[n].class;
+
                 const p = document.createElement('p');
                 p.innerText = predictions[n].class + ' - with ' +
                     Math.round(parseFloat(predictions[n].score) * 100) +
@@ -99,10 +92,18 @@ function predictWebcam() {
                 liveView.appendChild(p);
                 children.push(highlighter);
                 children.push(p);
+
+                if (new_object !== msg.text) {
+                    console.log("msg: " + msg.text);
+                    window.speechSynthesis.speak(msg);
+                    new_object = msg.text;
+                    break;
+                }
             }
         }
 
-        // Call this function again to keep predicting when the browser is ready.
-        window.requestAnimationFrame(predictWebcam);
+        // keep predicting
+        //window.requestAnimationFrame(predictWebcam);
+        setTimeout(predictWebcam, 1000);
     });
 }
