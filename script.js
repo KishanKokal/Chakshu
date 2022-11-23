@@ -55,7 +55,9 @@ cocoSsd.load().then(function(loadedModel) {
 var children = [];
 var new_object = "";
 var msg = new SpeechSynthesisUtterance();
+var message = new SpeechSynthesisUtterance();
 msg.rate = 0.8;
+message.rate = 0.9;
 
 function predictWebcam() {
     // start classifying frame in the stream
@@ -95,7 +97,8 @@ function predictWebcam() {
 
                 if (new_object !== msg.text) {
                     console.log("msg: " + msg.text);
-                    window.speechSynthesis.speak(msg);
+                    message.text = "There's a " + msg.text + " ahead.";
+                    window.speechSynthesis.speak(message);
                     new_object = msg.text;
                     break;
                 }
@@ -104,6 +107,6 @@ function predictWebcam() {
 
         // keep predicting
         //window.requestAnimationFrame(predictWebcam);
-        setTimeout(predictWebcam, 1000);
+        setTimeout(predictWebcam, 1500);
     });
 }
